@@ -1,0 +1,74 @@
+:root {
+    /* Colors */
+    --color-background: #fbfaf6;
+    --color-surface: #ffffff;
+    --color-surface-soft: #f1f3eb;
+    --color-surface-warm: #f4eee5;
+
+    --color-primary: #315c4a;
+    --color-primary-dark: #244538;
+    --color-primary-light: #dce8df;
+
+    --color-accent: #96724f;
+    --color-accent-soft: #eadfce;
+
+    --color-heading: #263a32;
+    --color-text: #3f4743;
+    --color-text-soft: #68706c;
+    --color-border: #d9ddd7;
+
+    --color-white: #ffffff;
+    --color-black: #171b19;
+
+    /* Typography */
+    --font-heading:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    --font-body:
+        Inter,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    --font-size-xs: 0.875rem;
+    --font-size-sm: 1rem;
+    --font-size-base: 1.125rem;
+    --font-size-md: 1.25rem;
+    --font-size-lg: 1.5rem;
+    --font-size-xl: 2rem;
+    --font-size-2xl: clamp(2.3rem, 5vw, 4.5rem);
+    --font-size-section: clamp(2rem, 4vw, 3.35rem);
+
+    --line-height-tight: 1.15;
+    --line-height-heading: 1.25;
+    --line-height-body: 1.75;
+
+    /* Layout */
+    --container-width: 1180px;
+    --container-padding: 24px;
+
+    --section-space: clamp(72px, 9vw, 120px);
+    --section-space-small: clamp(48px, 6vw, 80px);
+
+    /* Radius */
+    --radius-small: 8px;
+    --radius-medium: 16px;
+    --radius-large: 28px;
+    --radius-pill: 999px;
+
+    /* Shadow */
+    --shadow-small:
+        0 8px 24px rgba(38, 58, 50, 0.08);
+
+    --shadow-medium:
+        0 18px 50px rgba(38, 58, 50, 0.12);
+
+    /* Transition */
+    --transition-fast: 160ms ease;
+    --transition-normal: 260ms ease;
+
+    /* Header */
+    --header-height: 88px;
+}

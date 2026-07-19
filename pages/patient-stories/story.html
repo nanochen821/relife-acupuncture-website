@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Read a patient treatment experience from ReLife Acupuncture.">
+
+    <title>Patient Story | ReLife Acupuncture</title>
+
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="../../css/variables.css">
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="../../css/layout.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/responsive.css">
+
+    <script src="../../js/navigation.js" defer></script>
+    <script src="../../js/main.js" defer></script>
+    <script src="../../js/patient-story-detail.js" defer></script>
+</head>
+
+<body>
+    <a class="skip-link" href="#main-content">
+        Skip to main content
+    </a>
+
+    <!-- Site header -->
+    <header class="site-header" data-site-header>
+        <div class="container header-inner">
+            <a class="site-logo" href="../../index.html" aria-label="ReLife Acupuncture home">
+                <img src="../../assets/images/brand/relife-logo.jpg" alt="ReLife Acupuncture">
+            </a>
+
+            <button class="mobile-menu-button" type="button" aria-expanded="false" aria-controls="primary-navigation"
+                data-menu-button>
+                <span class="sr-only">Open navigation menu</span>
+
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </button>
+
+            <nav id="primary-navigation" class="primary-navigation" aria-label="Primary navigation" data-navigation>
+                <ul class="navigation-list">
+                    <li>
+                        <a class="navigation-link" href="../../index.html">
+                            Home
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="navigation-link" href="../doctor/index.html">
+                            Meet Connie
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="navigation-link" href="../treatments/index.html">
+                            Treatments
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="navigation-link is-active" href="./index.html" aria-current="page">
+                            Patient Stories
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="navigation-link" href="../first-visit/index.html">
+                            First Visit
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="navigation-link" href="../articles/index.html">
+                            Health Articles
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="navigation-link" href="../locations/index.html">
+                            Locations
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="navigation-actions">
+                    <span class="language-link" aria-disabled="true" title="Chinese version coming soon">
+                        中文
+                    </span>
+
+                    <a class="button button-primary navigation-appointment" href="../contact/index.html">
+                        Book an Appointment
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <!-- Loading state -->
+        <section class="story-loading-section" data-story-loading>
+            <div class="container">
+                <p>Loading patient story…</p>
+            </div>
+        </section>
+
+        <!-- Story not found -->
+        <section class="story-error-section" data-story-error hidden>
+            <div class="container story-error-inner">
+                <p class="eyebrow">Patient Stories</p>
+
+                <h1>
+                    This patient story could not be found
+                </h1>
+
+                <p>
+                    The story may have been moved, removed,
+                    or the link may be incorrect.
+                </p>
+
+                <a class="button button-primary" href="./index.html">
+                    Return to Patient Stories
+                </a>
+            </div>
+        </section>
+
+        <!-- Story content -->
+        <article class="patient-story-detail" data-story-detail hidden>
+            <!-- Story hero -->
+            <header class="story-detail-hero">
+                <div class="container story-detail-hero-layout">
+                    <div class="story-detail-heading">
+                        <a class="story-back-link" href="./index.html">
+                            ← Back to Patient Stories
+                        </a>
+
+                        <p class="eyebrow" data-story-category></p>
+
+                        <h1 data-story-title></h1>
+
+                        <p class="story-detail-summary" data-story-summary></p>
+                    </div>
+
+                    <div class="story-detail-media" aria-hidden="true">
+                        <span data-story-media-label>
+                            Patient Story
+                        </span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Story body -->
+            <section class="section story-detail-body-section">
+                <div class="container story-detail-body-layout">
+                    <aside class="story-detail-sidebar">
+                        <div class="story-information-card">
+                            <h2>
+                                Story Overview
+                            </h2>
+
+                            <dl class="story-information-list">
+                                <div>
+                                    <dt>
+                                        Health concern
+                                    </dt>
+
+                                    <dd data-story-concern></dd>
+                                </div>
+
+                                <div>
+                                    <dt>
+                                        Care location
+                                    </dt>
+
+                                    <dd data-story-location></dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </aside>
+
+                    <div class="story-detail-content">
+                        <section class="story-content-section">
+                            <p class="eyebrow">
+                                Before Care
+                            </p>
+
+                            <h2>
+                                The patient’s initial concern
+                            </h2>
+
+                            <div data-story-before></div>
+                        </section>
+
+                        <section class="story-content-section">
+                            <p class="eyebrow">
+                                Care Experience
+                            </p>
+
+                            <h2>
+                                Care at ReLife
+                            </h2>
+
+                            <div data-story-treatment></div>
+                        </section>
+
+                        <blockquote class="story-patient-quote">
+                            <p data-story-quote></p>
+
+                            <footer>
+                                Patient experience shared with ReLife
+                            </footer>
+                        </blockquote>
+
+                        <section class="story-content-section">
+                            <p class="eyebrow">
+                                Patient Experience
+                            </p>
+
+                            <h2>
+                                The patient’s experience over time
+                            </h2>
+
+                            <div data-story-progress></div>
+                        </section>
+
+                        <div class="story-medical-note">
+                            <h2>Important note</h2>
+
+                            <p>
+                                This story describes one individual's
+                                personal experience. Responses to care vary,
+                                and no specific result can be guaranteed.
+                                This information is not a substitute for
+                                professional medical advice, diagnosis,
+                                or treatment.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Appointment -->
+            <section class="appointment-section">
+                <div class="container appointment-inner">
+                    <div>
+                        <p class="eyebrow">
+                            Questions About Care?
+                        </p>
+
+                        <h2>
+                            Speak directly with ReLife
+                        </h2>
+
+                        <p>
+                            Patient experiences are individual.
+                            Contact the clinic to ask about available
+                            services or appointment information.
+                        </p>
+                    </div>
+
+                    <div class="appointment-actions">
+                        <a class="button button-light" href="tel:+14088883616">
+                            Call (408) 888-3616
+                        </a>
+
+                        <a class="button button-outline-light" href="../contact/index.html">
+                            Book an Appointment
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </article>
+    </main>
+
+    <!-- Site footer -->
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <!-- Brand -->
+            <div class="footer-brand">
+                <a class="footer-logo" href="../../index.html">
+                    ReLife Acupuncture
+                </a>
+
+                <p>
+                    Personalized acupuncture and cupping care
+                    in Fremont and Pleasanton.
+                </p>
+            </div>
+
+            <!-- Explore -->
+            <div>
+                <h2 class="footer-heading">
+                    Explore
+                </h2>
+
+                <ul class="footer-links">
+                    <li>
+                        <a href="../doctor/index.html">
+                            Meet Connie
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="../treatments/index.html">
+                            Treatments
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="../patient-stories/index.html">
+                            Patient Stories
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="../first-visit/index.html">
+                            First Visit
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="../articles/index.html">
+                            Health Articles
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Locations -->
+            <div>
+                <h2 class="footer-heading">
+                    Locations
+                </h2>
+
+                <ul class="footer-links">
+                    <li>
+                        <a href="../locations/fremont.html">
+                            Fremont
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="../locations/pleasanton.html">
+                            Pleasanton
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="../locations/index.html">
+                            View All Locations
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Contact -->
+            <div>
+                <h2 class="footer-heading">
+                    Contact
+                </h2>
+
+                <ul class="footer-contact">
+                    <li>
+                        <a href="tel:+14088883616">
+                            Call (408) 888-3616
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="mailto:relife.acup@gmail.com">
+                            relife.acup@gmail.com
+                        </a>
+                    </li>
+                </ul>
+
+                <!--
+                Change this to "Request an Appointment"
+                only after the appointment request workflow
+                has been confirmed and connected.
+            -->
+                <a class="button button-primary" href="../contact/index.html">
+                    Book an Appointment
+                </a>
+            </div>
+        </div>
+
+        <div class="container footer-bottom">
+            <p>
+                &copy;
+                <span data-current-year></span>
+                ReLife Acupuncture. All rights reserved.
+            </p>
+
+            <p class="medical-disclaimer">
+                Information on this website is for general
+                educational purposes and is not a substitute
+                for professional medical advice, diagnosis,
+                or treatment.
+            </p>
+        </div>
+    </footer>
+</body>
+
+</html>

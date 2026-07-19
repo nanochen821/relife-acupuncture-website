@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Read health articles written or approved by ReLife Acupuncture.">
+
+    <title>Health Articles | ReLife Acupuncture</title>
+
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="../../css/variables.css">
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="../../css/layout.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/responsive.css">
+
+    <script src="../../js/navigation.js" defer></script>
+    <script src="../../js/main.js" defer></script>
+    <script src="../../js/articles.js" defer></script>
+</head>
+
+<body>
+    <a class="skip-link" href="#main-content">
+        Skip to main content
+    </a>
+
+    <!-- Site header -->
+    <header class="site-header" data-site-header>
+        <div class="container header-inner">
+            <a class="site-logo" href="../../index.html" aria-label="ReLife Acupuncture home">
+                <img src="../../assets/images/brand/relife-logo.jpg" alt="ReLife Acupuncture">
+            </a>
+
+            <button class="mobile-menu-button" type="button" aria-expanded="false" aria-controls="primary-navigation"
+                data-menu-button>
+                <span class="sr-only">
+                    Open navigation menu
+                </span>
+
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </button>
+
+            <nav id="primary-navigation" class="primary-navigation" aria-label="Primary navigation" data-navigation>
+                <ul class="navigation-list">
+                    <li>
+                        <a class="navigation-link" href="../../index.html">
+                            Home
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="navigation-link" href="../doctor/index.html">
+                            Meet Connie
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="navigation-link" href="../treatments/index.html">
+                            Treatments
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="navigation-link" href="../patient-stories/index.html">
+                            Patient Stories
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="navigation-link" href="../first-visit/index.html">
+                            First Visit
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="navigation-link is-active" href="./index.html" aria-current="page">
+                            Health Articles
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="navigation-link" href="../locations/index.html">
+                            Locations
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="navigation-actions">
+                    <span class="language-link" aria-disabled="true" title="Chinese version coming soon" lang="zh-Hant">
+                        中文
+                    </span>
+
+                    <a class="button button-primary navigation-appointment" href="../contact/index.html">
+                        Book an Appointment
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <!-- Articles hero -->
+        <section class="articles-page-hero">
+            <div class="container articles-page-hero-inner">
+                <p class="eyebrow">
+                    Health Information
+                </p>
+
+                <h1>
+                    Health articles from ReLife Acupuncture
+                </h1>
+
+                <p class="articles-page-hero-description">
+                    This section is reserved for educational articles
+                    written or reviewed by the clinic.
+                </p>
+
+                <div class="clinic-placeholder">
+                    <strong>[Clinic content needed]</strong>
+
+                    <p>
+                        [Clinic to provide a short introduction explaining
+                        the purpose of its health articles and the topics
+                        it plans to discuss.]
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Article tools -->
+        <section class="article-tools-section" aria-label="Search and filter health articles">
+            <div class="container article-tools-layout">
+                <div class="article-search-field">
+                    <label for="article-search">
+                        Search health articles
+                    </label>
+
+                    <input id="article-search" type="search" placeholder="Search by title or topic" autocomplete="off"
+                        data-article-search>
+                </div>
+
+                <div class="article-filter-list" aria-label="Article categories">
+                    <button class="article-filter-button is-active" type="button" data-article-filter="all">
+                        All Articles
+                    </button>
+
+                    <button class="article-filter-button" type="button" data-article-filter="acupuncture">
+                        Acupuncture & TCM
+                    </button>
+
+                    <button class="article-filter-button" type="button" data-article-filter="pain">
+                        Pain & Mobility
+                    </button>
+
+                    <button class="article-filter-button" type="button" data-article-filter="wellness">
+                        Everyday Wellness
+                    </button>
+
+                    <button class="article-filter-button" type="button" data-article-filter="sleep">
+                        Sleep & Stress
+                    </button>
+
+                    <button class="article-filter-button" type="button" data-article-filter="allergy">
+                        Allergy & Immune
+                    </button>
+
+                    <button class="article-filter-button" type="button"
+                        data-article-filter="stories-from-the-treatment-room">
+                        Treatment Room Stories
+                    </button>
+
+                    <button class="article-filter-button" type="button" data-article-filter="news">
+                        Clinic News
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading -->
+        <section class="articles-loading-section" data-articles-loading>
+            <div class="container">
+                <p>Loading health articles…</p>
+            </div>
+        </section>
+
+        <!-- Articles content -->
+        <div data-articles-content hidden>
+            <!-- Featured article -->
+            <section class="section featured-article-section" data-featured-article-section>
+                <div class="container">
+                    <div class="section-heading">
+                        <p class="eyebrow">
+                            Featured Article
+                        </p>
+
+                        <h2>
+                            Selected health information from ReLife
+                        </h2>
+                    </div>
+
+                    <div data-featured-article></div>
+                </div>
+            </section>
+
+            <!-- All articles -->
+            <section class="section all-articles-section">
+                <div class="container">
+                    <div class="articles-list-heading">
+                        <div>
+                            <p class="eyebrow">
+                                Browse Articles
+                            </p>
+
+                            <h2>
+                                Health information and clinic updates
+                            </h2>
+                        </div>
+
+                        <p class="article-result-count" data-article-result-count aria-live="polite"></p>
+                    </div>
+
+                    <div class="health-article-grid" data-articles-list></div>
+
+                    <div class="articles-empty-state" data-articles-empty hidden>
+                        <h3>
+                            No articles found
+                        </h3>
+
+                        <p>
+                            Try a different search term or category.
+                        </p>
+                    </div>
+
+                    <div class="articles-load-more">
+                        <button class="button button-secondary" type="button" data-load-more-articles>
+                            Show More Articles
+                        </button>
+                    </div>
+
+                    <p class="article-medical-disclaimer">
+                        Articles on this website are intended for general
+                        educational purposes only. They are not a substitute
+                        for professional medical advice, diagnosis,
+                        or treatment.
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <!-- Writing information -->
+        <section class="section article-author-section">
+            <div class="container article-author-layout">
+                <div>
+                    <p class="eyebrow">
+                        Article Information
+                    </p>
+
+                    <h2>
+                        Content written or approved by the clinic
+                    </h2>
+
+                    <p>
+                        Each published article should clearly identify
+                        its author, publication date, and most recent
+                        review date.
+                    </p>
+                </div>
+
+                <div class="clinic-placeholder">
+                    <strong>[Clinic confirmation needed]</strong>
+
+                    <p>
+                        [Clinic to decide whether articles will be written
+                        personally by Connie, edited by another writer,
+                        or reviewed by a licensed healthcare professional.]
+                    </p>
+
+                    <p>
+                        [Clinic to decide whether readers may submit
+                        questions or suggest future article topics.]
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact CTA -->
+        <section class="appointment-section">
+            <div class="container appointment-inner">
+                <div>
+                    <p class="eyebrow">
+                        Questions About Your Health?
+                    </p>
+
+                    <h2>
+                        General articles cannot replace individual care
+                    </h2>
+
+                    <p>
+                        Contact ReLife regarding appointments,
+                        available services, or your first visit.
+                    </p>
+                </div>
+
+                <div class="appointment-actions">
+                    <a class="button button-light" href="tel:+14088883616">
+                        Call (408) 888-3616
+                    </a>
+
+                    <a class="button button-outline-light" href="../contact/index.html">
+                        Book an Appointment
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Site footer -->
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <!-- Brand -->
+            <div class="footer-brand">
+                <a class="footer-logo" href="../../index.html">
+                    ReLife Acupuncture
+                </a>
+
+                <p>
+                    Personalized acupuncture and cupping care
+                    in Fremont and Pleasanton.
+                </p>
+            </div>
+
+            <!-- Explore -->
+            <div>
+                <h2 class="footer-heading">
+                    Explore
+                </h2>
+
+                <ul class="footer-links">
+                    <li>
+                        <a href="../doctor/index.html">
+                            Meet Connie
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="../treatments/index.html">
+                            Treatments
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="../patient-stories/index.html">
+                            Patient Stories
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="../first-visit/index.html">
+                            First Visit
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="../articles/index.html">
+                            Health Articles
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Locations -->
+            <div>
+                <h2 class="footer-heading">
+                    Locations
+                </h2>
+
+                <ul class="footer-links">
+                    <li>
+                        <a href="../locations/fremont.html">
+                            Fremont
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="../locations/pleasanton.html">
+                            Pleasanton
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="../locations/index.html">
+                            View All Locations
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Contact -->
+            <div>
+                <h2 class="footer-heading">
+                    Contact
+                </h2>
+
+                <ul class="footer-contact">
+                    <li>
+                        <a href="tel:+14088883616">
+                            Call (408) 888-3616
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="mailto:relife.acup@gmail.com">
+                            relife.acup@gmail.com
+                        </a>
+                    </li>
+                </ul>
+
+                <!--
+                Change this to "Request an Appointment"
+                only after the appointment request workflow
+                has been confirmed and connected.
+            -->
+                <a class="button button-primary" href="../contact/index.html">
+                    Book an Appointment
+                </a>
+            </div>
+        </div>
+
+        <div class="container footer-bottom">
+            <p>
+                &copy;
+                <span data-current-year></span>
+                ReLife Acupuncture. All rights reserved.
+            </p>
+
+            <p class="medical-disclaimer">
+                Information on this website is for general
+                educational purposes and is not a substitute
+                for professional medical advice, diagnosis,
+                or treatment.
+            </p>
+        </div>
+    </footer>
+</body>
+
+</html>

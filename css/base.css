@@ -1,0 +1,148 @@
+body {
+    background: var(--color-background);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-body);
+}
+
+body.menu-open {
+    overflow: hidden;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    color: var(--color-heading);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    line-height: var(--line-height-heading);
+}
+
+h1 {
+    font-size: var(--font-size-2xl);
+    line-height: var(--line-height-tight);
+    letter-spacing: -0.035em;
+}
+
+h2 {
+    font-size: var(--font-size-section);
+    letter-spacing: -0.025em;
+}
+
+h3 {
+    font-size: var(--font-size-lg);
+}
+
+p {
+    max-width: 68ch;
+}
+
+a {
+    transition:
+        color var(--transition-fast),
+        background-color var(--transition-fast),
+        border-color var(--transition-fast),
+        transform var(--transition-fast);
+}
+
+a:focus-visible,
+button:focus-visible {
+    outline: 3px solid rgba(49, 92, 74, 0.32);
+    outline-offset: 4px;
+}
+
+img {
+    object-fit: cover;
+}
+
+::selection {
+    background: var(--color-primary);
+    color: var(--color-white);
+}
+
+.container {
+    width: min(
+        calc(100% - (var(--container-padding) * 2)),
+        var(--container-width)
+    );
+    margin-inline: auto;
+}
+
+.section {
+    padding-block: var(--section-space);
+}
+
+.eyebrow {
+    margin-bottom: 16px;
+    color: var(--color-primary);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    line-height: 1.4;
+    text-transform: uppercase;
+}
+
+.section-heading {
+    max-width: 760px;
+    margin-bottom: 48px;
+}
+
+.section-heading h2 {
+    margin-bottom: 20px;
+}
+
+.section-heading > p:last-child {
+    color: var(--color-text-soft);
+}
+
+.section-heading-row {
+    max-width: none;
+}
+
+.section-heading-row > div {
+    max-width: 760px;
+}
+
+.section-action {
+    display: flex;
+    justify-content: center;
+    margin-top: 48px;
+}
+
+.card-grid {
+    display: grid;
+    gap: 24px;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.skip-link {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 1000;
+    padding: 12px 18px;
+    border-radius: var(--radius-small);
+    background: var(--color-primary-dark);
+    color: var(--color-white);
+    font-weight: 700;
+    transform: translateY(-160%);
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+}
+
+[hidden] {
+    display: none !important;
+}
