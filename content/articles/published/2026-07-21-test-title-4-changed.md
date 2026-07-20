@@ -1,0 +1,11 @@
+---
+title: "TEST TITLE 4 CHANGED"
+date: 2026-07-21
+category: "Wellness"
+author: "ReLife Acupuncture"
+summary: "TEST SUMMORY 4 CHANGED"
+featured: false
+slug: "test-title-4-changed"
+---
+TEST CONTENT 4 CHANGED
+
