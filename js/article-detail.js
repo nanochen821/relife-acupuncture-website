@@ -656,18 +656,10 @@ function renderArticle(article) {
         metaItems.join(" · ")
     );
 
-    if (article.markdownBody) {
-        renderMarkdownArticleBody(
-            article.markdownBody
-        );
-    } else {
-        /*
-         * Temporary support for old JSON articles.
-         * Remove after the Markdown migration is complete.
-         */
-        renderArticleBody(article.content);
-    }
-    
+    renderMarkdownArticleBody(
+        article.markdownBody
+    );
+
     updateArticleMetadata(article);
 
     if (articleLoadingSection) {
@@ -709,59 +701,33 @@ async function loadArticle() {
             );
         }
 
-        const articleData = await response.json();
+        const markdownPaths = await response.json();
 
-        let selectedArticle = null;
-        let markdownPaths = null;
-
-        const isMarkdownPathList =
-            Array.isArray(articleData) &&
-            articleData.every(
+        const isValidManifest =
+            Array.isArray(markdownPaths) &&
+            markdownPaths.every(
                 (item) => typeof item === "string"
             );
 
-        const hasMarkdownManifest =
-            articleData &&
-            !Array.isArray(articleData) &&
-            Array.isArray(articleData.articles);
-
-        if (isMarkdownPathList) {
-            markdownPaths = articleData;
-        } else if (hasMarkdownManifest) {
-            markdownPaths = articleData.articles;
+        if (!isValidManifest) {
+            throw new Error(
+                "Article manifest must be an array of Markdown paths."
+            );
         }
 
-        if (markdownPaths) {
-            const selectedMarkdownPath =
-                markdownPaths.find((markdownPath) => {
-                    return (
-                        getSlugFromMarkdownPath(
-                            markdownPath
-                        ) === requestedSlug
-                    );
-                });
+        const selectedMarkdownPath =
+            markdownPaths.find((markdownPath) => {
+                return (
+                    getSlugFromMarkdownPath(markdownPath) ===
+                    requestedSlug
+                );
+            });
 
-            if (selectedMarkdownPath) {
-                selectedArticle =
-                    await loadMarkdownArticle(
-                        selectedMarkdownPath
-                    );
-            }
-        } else if (Array.isArray(articleData)) {
-            /*
-             * Temporary compatibility with old JSON articles.
-             * Remove after every article has moved to Markdown.
-             */
-            selectedArticle = articleData.find(
-                (article) => {
-                    const articleSlug =
-                        article.slug || article.id;
+        let selectedArticle = null;
 
-                    return (
-                        articleSlug === requestedSlug &&
-                        article.published === true
-                    );
-                }
+        if (selectedMarkdownPath) {
+            selectedArticle = await loadMarkdownArticle(
+                selectedMarkdownPath
             );
         }
 

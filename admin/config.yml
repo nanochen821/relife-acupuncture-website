@@ -1,0 +1,156 @@
+local_backend: true
+
+backend:
+  name: github
+  repo: nanochen821/relife-acupuncture-website
+  branch: feature/clinic-content-manager
+
+media_folder: "assets/uploads"
+public_folder: "/relife-acupuncture-website/assets/uploads"
+
+site_url: "https://nanochen821.github.io/relife-acupuncture-website/"
+display_url: "https://nanochen821.github.io/relife-acupuncture-website/"
+
+# Local backend does not support editorial_workflow.
+# Restore this line for the production GitHub backend later:
+# publish_mode: editorial_workflow
+
+slug:
+  encoding: "ascii"
+  clean_accents: true
+  sanitize_replacement: "-"
+
+collections:
+  - name: "articles"
+    label: "Health Articles"
+    label_singular: "Health Article"
+    folder: "content/articles/published"
+    create: true
+    delete: true
+    extension: "md"
+    format: "frontmatter"
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    summary: "{{title}} — {{date}}"
+
+    fields:
+      - label: "Title"
+        name: "title"
+        widget: "string"
+
+      - label: "Publish Date"
+        name: "date"
+        widget: "datetime"
+        format: "YYYY-MM-DD"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+
+      - label: "Category"
+        name: "category"
+        widget: "select"
+        options:
+          - "Acupuncture"
+          - "Pain Management"
+          - "Women's Health"
+          - "Wellness"
+          - "General Health"
+
+      - label: "Author"
+        name: "author"
+        widget: "string"
+        default: "ReLife Acupuncture"
+
+      - label: "Summary"
+        name: "summary"
+        widget: "text"
+
+      - label: "Featured Article"
+        name: "featured"
+        widget: "boolean"
+        default: false
+        required: false
+
+      - label: "Cover Image"
+        name: "image"
+        widget: "image"
+        required: false
+
+      - label: "Article Content"
+        name: "body"
+        widget: "markdown"
+
+  - name: "patient_stories"
+    label: "Patient Stories"
+    label_singular: "Patient Story"
+    folder: "content/patient-stories"
+    create: true
+    delete: true
+    extension: "md"
+    format: "frontmatter"
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    summary: "{{title}} — {{date}}"
+
+    fields:
+      - label: "Story Title"
+        name: "title"
+        widget: "string"
+
+      - label: "Publish Date"
+        name: "date"
+        widget: "datetime"
+        format: "YYYY-MM-DD"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+
+      - label: "Patient Display Name"
+        name: "patient_name"
+        widget: "string"
+        required: false
+
+      - label: "Identity Display"
+        name: "identity_display"
+        widget: "select"
+        default: "anonymous"
+        options:
+          - label: "Anonymous"
+            value: "anonymous"
+          - label: "Initials"
+            value: "initials"
+          - label: "First Name Only"
+            value: "first_name"
+          - label: "Full Name"
+            value: "full_name"
+
+      - label: "Treatment Topic"
+        name: "treatment_topic"
+        widget: "string"
+
+      - label: "Summary"
+        name: "summary"
+        widget: "text"
+
+      - label: "YouTube URL"
+        name: "youtube_url"
+        widget: "string"
+        required: false
+        hint: "Paste the full YouTube video URL."
+
+      - label: "Cover Image"
+        name: "image"
+        widget: "image"
+        required: false
+
+      - label: "Featured Story"
+        name: "featured"
+        widget: "boolean"
+        default: false
+        required: false
+
+      - label: "Patient Consent Confirmed"
+        name: "consent_confirmed"
+        widget: "boolean"
+        default: false
+        hint: "Confirm that permission has been obtained before publishing."
+
+      - label: "Story Content"
+        name: "body"
+        widget: "markdown"

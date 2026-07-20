@@ -1,0 +1,29 @@
+[build]
+  command = "npm run content:build"
+  publish = "."
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[context.production]
+  command = "npm run content:build"
+
+[context.deploy-preview]
+  command = "npm run content:build"
+
+[context.branch-deploy]
+  command = "npm run content:build"
+
+[[headers]]
+  for = "/admin/*"
+
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/assets/*"
+
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
