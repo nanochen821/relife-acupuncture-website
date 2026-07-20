@@ -1,1 +1,4 @@
 repomix-output.xml
+.env
+.netlify
+node_modules

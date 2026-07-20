@@ -2,8 +2,12 @@
   command = "npm run content:build"
   publish = "."
 
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
 [build.environment]
-  NODE_VERSION = "18"
+  NODE_VERSION = "24"
 
 [context.production]
   command = "npm run content:build"

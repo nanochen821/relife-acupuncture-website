@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="utf-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <meta
+        name="robots"
+        content="noindex, nofollow"
+    >
+
+    <title>管理後台登入｜ReLife Acupuncture</title>
+
+    <link
+        rel="stylesheet"
+        href="/admin/admin.css"
+    >
+
+    <script
+        src="/admin/admin-login.js"
+        defer
+    ></script>
+</head>
+
+<body class="admin-page">
+    <main class="login-layout">
+        <section
+            class="login-card"
+            aria-labelledby="login-title"
+        >
+            <header class="login-header">
+                <p class="login-eyebrow">
+                    ReLife Acupuncture
+                </p>
+
+                <h1 id="login-title">
+                    內容管理後台
+                </h1>
+
+                <p class="login-description">
+                    請輸入管理員帳號與密碼。
+                </p>
+            </header>
+
+            <form
+                id="admin-login-form"
+                class="login-form"
+                novalidate
+            >
+                <div class="form-field">
+                    <label for="username">
+                        帳號
+                    </label>
+
+                    <input
+                        id="username"
+                        name="username"
+                        type="text"
+                        autocomplete="username"
+                        maxlength="100"
+                        required
+                    >
+                </div>
+
+                <div class="form-field">
+                    <label for="password">
+                        密碼
+                    </label>
+
+                    <input
+                        id="password"
+                        name="password"
+                        type="password"
+                        autocomplete="current-password"
+                        maxlength="256"
+                        required
+                    >
+                </div>
+
+                <p
+                    id="login-message"
+                    class="form-message"
+                    role="alert"
+                    aria-live="polite"
+                    hidden
+                ></p>
+
+                <button
+                    id="login-submit"
+                    class="primary-button"
+                    type="submit"
+                >
+                    登入
+                </button>
+            </form>
+
+            <noscript>
+                <p class="form-message form-message--error">
+                    此管理後台需要啟用 JavaScript。
+                </p>
+            </noscript>
+        </section>
+    </main>
+</body>
+</html>
