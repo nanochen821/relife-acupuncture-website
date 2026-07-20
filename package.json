@@ -1,0 +1,15 @@
+{
+    "name": "relife-acupuncture-website",
+    "version": "1.0.0",
+    "private": true,
+    "description": "ReLife Acupuncture website and Clinic Content Manager.",
+    "type": "module",
+    "scripts": {
+      "content:validate": "node scripts/content/validate-content.mjs",
+      "content:generate": "node scripts/content/generate-manifests.mjs",
+      "content:build": "npm run content:validate && npm run content:generate"
+    },
+    "engines": {
+      "node": ">=18"
+    }
+  }

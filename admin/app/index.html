@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="robots" content="noindex, nofollow">
+
+    <title>ReLife CMS</title>
+
+    <link rel="stylesheet" href="/admin/admin.css">
+
+    <script src="/admin/admin-app.js" defer></script>
+</head>
+
+<body class="admin-page">
+
+    <header class="admin-header">
+
+        <div>
+            <h1>ReLife CMS</h1>
+
+            <p class="admin-subtitle">
+                Clinic Content Management
+            </p>
+        </div>
+
+        <div class="admin-user">
+
+            <span id="current-user">
+                Loading...
+            </span>
+
+            <button id="logout-button" class="secondary-button" type="button">
+                Logout
+            </button>
+
+        </div>
+
+    </header>
+
+    <main class="admin-main">
+        <section class="admin-card">
+            <div class="section-heading">
+                <div class="section-heading__content">
+                    <p class="section-eyebrow">
+                        Content
+                    </p>
+
+                    <h2>
+                        Article Management
+                    </h2>
+
+                    <p class="section-description">
+                        管理健康文章草稿與已發布內容。
+                    </p>
+                </div>
+
+                <a class="primary-button section-action" href="/admin/app/article-new.html">
+                    新增文章
+                </a>
+            </div>
+
+            <div id="article-status" class="content-status" aria-live="polite">
+                正在載入文章...
+            </div>
+
+            <div id="article-content" hidden>
+                <section class="article-group">
+                    <div class="article-group__heading">
+                        <div>
+                            <p class="section-eyebrow">
+                                Drafts
+                            </p>
+
+                            <h3>
+                                草稿文章
+                            </h3>
+                        </div>
+
+                        <span id="draft-count">
+                            0 篇
+                        </span>
+                    </div>
+
+                    <div id="draft-article-list" class="article-list"></div>
+
+                    <p id="draft-empty" class="content-status" hidden>
+                        目前沒有草稿文章。
+                    </p>
+                </section>
+
+                <section class="article-group">
+                    <div class="article-group__heading">
+                        <div>
+                            <p class="section-eyebrow">
+                                Published
+                            </p>
+
+                            <h3>
+                                已發布文章
+                            </h3>
+                        </div>
+
+                        <span id="published-count">
+                            0 篇
+                        </span>
+                    </div>
+
+                    <div id="published-article-list" class="article-list"></div>
+
+                    <p id="published-empty" class="content-status" hidden>
+                        目前沒有已發布的文章。
+                    </p>
+                </section>
+            </div>
+
+            <div id="article-list" class="article-list" hidden></div>
+        </section>
+    </main>
+</body>
+
+</html>

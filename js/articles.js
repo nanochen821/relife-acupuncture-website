@@ -52,18 +52,12 @@ function normalizeText(value) {
 }
 
 /*
- * Markdown article support
+ * Markdown-first article system
  *
- * Current direction:
- * - Clinic articles are stored as simple Markdown files.
- * - data/articles.json only acts as a generated article manifest.
- * - Authors should not manually edit complex JSON content blocks.
- *
- * FUTURE CMS / ADMIN:
- * Replace direct Markdown file management with a secure clinic login,
- * visual editor, image uploader, draft preview, and publish button.
- * The CMS should generate the article slug, manifest, reading time,
- * publication state, and image paths automatically.
+ * - Articles are stored as Markdown files with front matter.
+ * - data/articles.json is a generated list of Markdown paths.
+ * - Article metadata and body are loaded directly from Markdown.
+ * - Decap CMS manages the Markdown source files.
  */
 
 function createSlug(value) {
@@ -280,26 +274,6 @@ async function loadMarkdownArticle(markdownPath) {
         published: true,
         markdownPath,
         markdownBody: body
-    };
-}
-
-function normalizeLegacyArticle(article) {
-    const categoryLabel =
-        article.categoryLabel ||
-        article.category ||
-        "Health Information";
-
-    return {
-        ...article,
-        slug: article.slug || article.id,
-        category:
-            article.category ||
-            createSlug(categoryLabel),
-        categoryLabel,
-        displayDate:
-            article.displayDate ||
-            formatArticleDate(article.date),
-        published: article.published === true
     };
 }
 
@@ -553,60 +527,22 @@ async function loadArticles() {
             );
         }
 
-        const articleData = await response.json();
+        const articlePaths = await response.json();
 
-        let loadedArticles = [];
-
-        /*
-         * New Markdown manifest format:
-         *
-         * [
-         *     "content/articles/published/example.md"
-         * ]
-         */
-        const isMarkdownPathList =
-            Array.isArray(articleData) &&
-            articleData.every(
+        if (
+            !Array.isArray(articlePaths) ||
+            !articlePaths.every(
                 (item) => typeof item === "string"
-            );
-
-        /*
-         * Also allow a future generated manifest:
-         *
-         * {
-         *     "articles": [
-         *         "content/articles/published/example.md"
-         *     ]
-         * }
-         */
-        const hasMarkdownManifest =
-            articleData &&
-            !Array.isArray(articleData) &&
-            Array.isArray(articleData.articles);
-
-        if (isMarkdownPathList) {
-            loadedArticles = await Promise.all(
-                articleData.map(loadMarkdownArticle)
-            );
-        } else if (hasMarkdownManifest) {
-            loadedArticles = await Promise.all(
-                articleData.articles.map(
-                    loadMarkdownArticle
-                )
-            );
-        } else if (Array.isArray(articleData)) {
-            /*
-             * Temporary compatibility with the old JSON format.
-             * Remove this branch after all articles use Markdown.
-             */
-            loadedArticles = articleData.map(
-                normalizeLegacyArticle
-            );
-        } else {
+            )
+        ) {
             throw new Error(
-                "Unsupported article data format."
+                "Article manifest must be an array of Markdown paths."
             );
         }
+
+        const loadedArticles = await Promise.all(
+            articlePaths.map(loadMarkdownArticle)
+        );
 
         articles = loadedArticles
             .filter(

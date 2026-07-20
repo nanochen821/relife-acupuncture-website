@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>新增文章｜Relife Admin</title>
+
+    <link rel="stylesheet" href="/admin/admin.css">
+</head>
+
+<body class="admin-page">
+    <header class="admin-header">
+        <div>
+            <h1>Relife Admin</h1>
+
+            <p class="admin-subtitle">
+                內容管理後台
+            </p>
+        </div>
+
+        <div class="admin-user">
+            <span id="current-user">
+                正在確認登入狀態...
+            </span>
+
+            <a class="secondary-button button-link" href="/admin/app/">
+                返回文章列表
+            </a>
+
+            <button id="logout-button" class="secondary-button" type="button">
+                登出
+            </button>
+        </div>
+    </header>
+
+    <main class="admin-main">
+        <section class="admin-card">
+            <div class="section-heading">
+                <div>
+                    <p id="article-form-eyebrow" class="section-eyebrow">
+                        New Article
+                    </p>
+                    
+                    <h2 id="article-form-title">
+                        新增健康文章
+                    </h2>
+                    
+                    <p id="article-form-description" class="section-description">
+                        先建立文章基本資料與內容。
+                    </p>
+                </div>
+            </div>
+
+            <form id="article-form" class="content-form">
+                <div class="form-field">
+                    <label for="article-title">
+                        標題
+                    </label>
+
+                    <input id="article-title" name="title" type="text" required>
+                </div>
+
+                <div class="form-field">
+                    <label for="article-date">
+                        發布日期
+                    </label>
+
+                    <input id="article-date" name="date" type="date" required>
+                </div>
+
+                <div class="form-field">
+                    <label for="article-description">
+                        摘要
+                    </label>
+
+                    <textarea id="article-description" name="description" rows="4"></textarea>
+                </div>
+
+                <div class="form-field">
+                    <label for="article-body">
+                        文章內容
+                    </label>
+
+                    <textarea id="article-body" name="body" rows="18" required></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <a class="secondary-button button-link" href="/admin/app/">
+                        取消
+                    </a>
+
+                    <button class="primary-button" type="submit" disabled>
+                        儲存文章
+                    </button>
+                </div>
+
+                <p class="form-help">
+                    填寫文章資料後儲存為草稿。
+                </p>
+            </form>
+        </section>
+    </main>
+
+    <script type="module" src="/admin/admin-app.js"></script>
+    <script type="module" src="/admin/article-new.js"></script>
+</body>
+
+</html>
