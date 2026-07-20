@@ -1,3 +1,12 @@
+const pageParameters =
+    new URLSearchParams(window.location.search);
+
+const editingPath =
+    pageParameters.get("path")?.trim() || "";
+
+const isEditMode =
+    editingPath.length > 0;
+
 const articleForm = document.querySelector("#article-form");
 
 const titleInput = document.querySelector("#article-title");
@@ -13,11 +22,22 @@ const submitButton = articleForm?.querySelector(
 
 const formMessage = document.querySelector(".form-help");
 
+const formEyebrow = document.querySelector(
+    "#article-form-eyebrow"
+);
+
+const formTitle = document.querySelector(
+    "#article-form-title"
+);
+
+const formDescription = document.querySelector(
+    "#article-form-description"
+);
 
 initializeArticleForm();
 
 
-function initializeArticleForm() {
+async function initializeArticleForm() {
     if (
         !articleForm ||
         !titleInput ||
@@ -28,14 +48,11 @@ function initializeArticleForm() {
         !formMessage
     ) {
         console.error(
-            "[CMS Create Article] Required form elements are missing."
+            "[CMS Article Form] Required form elements are missing."
         );
 
         return;
     }
-
-    setDefaultDate();
-    updateSubmitState();
 
     articleForm.addEventListener(
         "input",
@@ -46,8 +63,138 @@ function initializeArticleForm() {
         "submit",
         handleSubmit
     );
+
+    if (isEditMode) {
+        await initializeEditMode();
+        return;
+    }
+
+    initializeCreateMode();
 }
 
+function initializeCreateMode() {
+    setDefaultDate();
+
+    submitButton.textContent =
+        "儲存文章";
+
+    updateSubmitState();
+}
+
+
+async function initializeEditMode() {
+    updatePageForEditMode();
+
+    submitButton.disabled = true;
+
+    showFormMessage(
+        "正在載入文章，請稍候。"
+    );
+
+    try {
+        const article =
+            await loadArticle(editingPath);
+
+        populateArticleForm(article);
+
+        showFormMessage(
+            "文章已載入，可以開始編輯。"
+        );
+
+        updateSubmitState();
+    } catch (error) {
+        console.error(
+            "[CMS Edit Article] Failed to load article:",
+            error
+        );
+
+        showFormMessage(
+            error.message ||
+            "無法載入文章，請返回文章列表後重試。",
+            "error"
+        );
+
+        submitButton.disabled = true;
+    }
+}
+
+function updatePageForEditMode() {
+    document.title =
+        "編輯文章｜Relife Admin";
+
+    if (formEyebrow) {
+        formEyebrow.textContent =
+            "Edit Article";
+    }
+
+    if (formTitle) {
+        formTitle.textContent =
+            "編輯健康文章";
+    }
+
+    if (formDescription) {
+        formDescription.textContent =
+            "修改草稿的基本資料與文章內容。";
+    }
+
+    submitButton.textContent =
+        "儲存變更";
+}
+
+
+async function loadArticle(articlePath) {
+    const response = await fetch(
+        "/.netlify/functions/admin-get-article",
+        {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json"
+            },
+            body: JSON.stringify({
+                path: articlePath
+            })
+        }
+    );
+
+    const result =
+        await readJsonResponse(response);
+
+    if (response.status === 401) {
+        window.location.replace(
+            "/admin/login.html"
+        );
+
+        throw new Error(
+            "Authentication required."
+        );
+    }
+
+    if (!response.ok || !result?.ok) {
+        throw new Error(
+            result?.error ||
+            "文章載入失敗，請稍後再試。"
+        );
+    }
+
+    return result.article;
+}
+
+
+function populateArticleForm(article) {
+    titleInput.value =
+        article.title || "";
+
+    dateInput.value =
+        article.date || "";
+
+    summaryInput.value =
+        article.summary || "";
+
+    bodyInput.value =
+        article.body || "";
+}
 
 function setDefaultDate() {
     if (dateInput.value) {
@@ -97,13 +244,21 @@ async function handleSubmit(event) {
     }
 
     setSubmittingState(true);
+
     showFormMessage(
-        "正在建立文章，請稍候。"
+        isEditMode
+            ? "正在儲存文章變更，請稍候。"
+            : "正在建立文章，請稍候。"
     );
 
     try {
+        const endpoint =
+            isEditMode
+                ? "/.netlify/functions/admin-update-article"
+                : "/.netlify/functions/admin-create-article";
+
         const response = await fetch(
-            "/.netlify/functions/admin-create-article",
+            endpoint,
             {
                 method: "POST",
                 credentials: "same-origin",
@@ -137,11 +292,15 @@ async function handleSubmit(event) {
         }
 
         showFormMessage(
-            `文章「${result.article.title}」已成功建立。`,
+            isEditMode
+                ? `文章「${result.article.title}」已成功更新。`
+                : `文章「${result.article.title}」已成功建立。`,
             "success"
         );
-
-        articleForm.reset();
+        
+        if (!isEditMode) {
+            articleForm.reset();
+        }
 
         window.setTimeout(
             () => {
@@ -153,13 +312,19 @@ async function handleSubmit(event) {
         );
     } catch (error) {
         console.error(
-            "[CMS Create Article] Request failed:",
+            isEditMode
+                ? "[CMS Update Article] Request failed:"
+                : "[CMS Create Article] Request failed:",
             error
         );
 
         showFormMessage(
             error.message ||
-            "文章建立失敗，請稍後再試。",
+            (
+                isEditMode
+                    ? "文章更新失敗，請稍後再試。"
+                    : "文章建立失敗，請稍後再試。"
+            ),
             "error"
         );
 
@@ -167,14 +332,19 @@ async function handleSubmit(event) {
     }
 }
 
-
 function createArticlePayload() {
-    return {
+    const payload = {
         title: titleInput.value.trim(),
         date: dateInput.value,
         summary: summaryInput.value.trim(),
         body: bodyInput.value.trim()
     };
+
+    if (isEditMode) {
+        payload.path = editingPath;
+    }
+
+    return payload;
 }
 
 
@@ -194,7 +364,9 @@ function setSubmittingState(isSubmitting) {
     submitButton.textContent =
         isSubmitting
             ? "儲存中..."
-            : "儲存文章";
+            : isEditMode
+                ? "儲存變更"
+                : "儲存文章";
 }
 
 

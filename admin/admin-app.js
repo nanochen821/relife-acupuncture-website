@@ -309,12 +309,12 @@ function createArticleCard(article) {
     const actionsElement = createArticleActions(
         article
     );
-    
+
     articleElement.append(
         contentElement,
         actionsElement
     );
-    
+
     return articleElement;
 }
 
@@ -328,22 +328,26 @@ function createArticleActions(article) {
     const editButton = createArticleActionButton({
         label: "編輯",
         variant: "secondary",
-        action: "edit"
-    });
-
-    const deleteButton = createArticleActionButton({
-        label: "刪除",
-        variant: "danger",
-        action: "delete"
+        action: "edit",
+        article
     });
 
     if (article.status === "draft") {
-        const publishButton = createArticleActionButton({
-            label: "發布文章",
-            variant: "primary",
-            action: "publish",
-            article
-        });
+        const publishButton =
+            createArticleActionButton({
+                label: "發布文章",
+                variant: "primary",
+                action: "publish",
+                article
+            });
+
+        const deleteButton =
+            createArticleActionButton({
+                label: "刪除",
+                variant: "danger",
+                action: "delete-draft",
+                article
+            });
 
         actionsElement.append(
             editButton,
@@ -365,6 +369,13 @@ function createArticleActions(article) {
         variant: "secondary",
         action: "unpublish"
     });
+
+    const deleteButton =
+        createArticleActionButton({
+            label: "刪除",
+            variant: "danger",
+            action: "delete-published"
+        });
 
     actionsElement.append(
         viewButton,
@@ -392,19 +403,63 @@ function createArticleActionButton({
     button.className =
         `article-action article-action--${variant}`;
 
-        button.dataset.articleAction = action;
+    button.dataset.articleAction = action;
 
-        button.textContent = label;
-        
-        button.disabled = action !== "publish";
-        if (action === "publish" && article) {
-            button.addEventListener(
-                "click",
-                () => publishArticle(article, button)
-            );
-        }
-        
-        return button;
+    button.textContent = label;
+
+    button.disabled =
+        action !== "publish" &&
+        action !== "edit" &&
+        action !== "delete-draft";
+
+    if (action === "publish" && article) {
+        button.addEventListener(
+            "click",
+            () => publishArticle(article, button)
+        );
+    }
+
+    if (action === "edit" && article) {
+        button.addEventListener(
+            "click",
+            () => openArticleEditor(article)
+        );
+    }
+
+    if (
+        action === "delete-draft" &&
+        article
+    ) {
+        button.addEventListener(
+            "click",
+            () => deleteDraftArticle(
+                article,
+                button
+            )
+        );
+    }
+
+    return button;
+}
+
+function openArticleEditor(article) {
+    if (
+        !article ||
+        typeof article.path !== "string" ||
+        !article.path.trim()
+    ) {
+        window.alert(
+            "找不到文章路徑，無法開啟編輯頁面。"
+        );
+
+        return;
+    }
+
+    const editorUrl =
+        "/admin/app/article-new.html" +
+        `?path=${encodeURIComponent(article.path)}`;
+
+    window.location.href = editorUrl;
 }
 
 async function publishArticle(
@@ -468,6 +523,94 @@ async function publishArticle(
         window.alert(
             error.message ||
             "文章發布失敗，請稍後再試。"
+        );
+
+        button.disabled = false;
+        button.textContent = originalText;
+    }
+}
+
+async function deleteDraftArticle(
+    article,
+    button
+) {
+    if (
+        !article ||
+        typeof article.path !== "string" ||
+        !article.path.trim()
+    ) {
+        window.alert(
+            "找不到文章路徑，無法刪除草稿。"
+        );
+
+        return;
+    }
+
+    const articleName =
+        article.title ||
+        article.filename ||
+        "Untitled article";
+
+    const confirmed =
+        window.confirm(
+            `確定要刪除草稿「${articleName}」嗎？\n\n這個動作無法從管理介面復原。`
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const originalText =
+        button.textContent;
+
+    button.disabled = true;
+    button.textContent = "刪除中...";
+
+    try {
+        const response = await fetch(
+            "/.netlify/functions/admin-delete-article",
+            {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    path: article.path
+                })
+            }
+        );
+
+        const result =
+            await response.json();
+
+        if (response.status === 401) {
+            redirectToLogin();
+            return;
+        }
+
+        if (!response.ok || !result.ok) {
+            throw new Error(
+                result.error ||
+                "Unable to delete article draft."
+            );
+        }
+
+        window.alert(
+            `草稿「${articleName}」已成功刪除。`
+        );
+
+        await loadArticles();
+    } catch (error) {
+        console.error(
+            "[CMS Admin] Failed to delete article draft:",
+            error
+        );
+
+        window.alert(
+            error.message ||
+            "草稿刪除失敗，請稍後再試。"
         );
 
         button.disabled = false;
