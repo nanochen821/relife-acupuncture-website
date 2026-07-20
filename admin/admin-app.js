@@ -1,8 +1,29 @@
 const currentUserElement = document.querySelector("#current-user");
 const logoutButton = document.querySelector("#logout-button");
 
-const articleStatus = document.querySelector("#article-status");
-const articleList = document.querySelector("#article-list");
+const articleStatus =
+    document.querySelector("#article-status");
+
+const articleContent =
+    document.querySelector("#article-content");
+
+const draftArticleList =
+    document.querySelector("#draft-article-list");
+
+const publishedArticleList =
+    document.querySelector("#published-article-list");
+
+const draftEmpty =
+    document.querySelector("#draft-empty");
+
+const publishedEmpty =
+    document.querySelector("#published-empty");
+
+const draftCount =
+    document.querySelector("#draft-count");
+
+const publishedCount =
+    document.querySelector("#published-count");
 
 
 function redirectToLogin() {
@@ -52,7 +73,12 @@ async function loadSession() {
         currentUserElement.textContent =
             `登入帳號：${result.user.username}`;
 
-        if (articleStatus && articleList) {
+        if (
+            articleStatus &&
+            articleContent &&
+            draftArticleList &&
+            publishedArticleList
+        ) {
             await loadArticles();
         }
 
@@ -142,9 +168,10 @@ async function loadArticles() {
             );
         }
 
-        renderArticles(
-            result.articles
-        );
+        renderArticleGroups({
+            drafts: result.drafts,
+            published: result.published
+        });
     } catch (error) {
         console.error(
             "[CMS Admin] Failed to load articles:",
@@ -158,38 +185,69 @@ async function loadArticles() {
     }
 }
 
+function renderArticleGroups({
+    drafts,
+    published
+}) {
+    const normalizedDrafts =
+        Array.isArray(drafts) ? drafts : [];
 
-function renderArticles(articles) {
-    articleList.replaceChildren();
+    const normalizedPublished =
+        Array.isArray(published) ? published : [];
 
-    if (
-        !Array.isArray(articles) ||
-        articles.length === 0
-    ) {
-        setArticleStatus(
-            "目前沒有已發布的文章。"
-        );
+    renderArticleList({
+        articles: normalizedDrafts,
+        listElement: draftArticleList,
+        emptyElement: draftEmpty,
+        countElement: draftCount
+    });
 
+    renderArticleList({
+        articles: normalizedPublished,
+        listElement: publishedArticleList,
+        emptyElement: publishedEmpty,
+        countElement: publishedCount
+    });
+
+    articleStatus.hidden = true;
+    articleContent.hidden = false;
+}
+
+
+function renderArticleList({
+    articles,
+    listElement,
+    emptyElement,
+    countElement
+}) {
+    listElement.replaceChildren();
+
+    countElement.textContent =
+        `${articles.length} 篇`;
+
+    if (articles.length === 0) {
+        listElement.hidden = true;
+        emptyElement.hidden = false;
         return;
     }
 
     for (const article of articles) {
-        articleList.append(
+        listElement.append(
             createArticleCard(article)
         );
     }
 
-    articleStatus.hidden = true;
-    articleList.hidden = false;
+    emptyElement.hidden = true;
+    listElement.hidden = false;
 }
-
 
 function createArticleCard(article) {
     const articleElement = document.createElement(
         "article"
     );
 
-    articleElement.className = "article-item";
+    articleElement.className =
+        `article-item article-item--${article.status || "unknown"}`;
 
     const contentElement = document.createElement(
         "div"
@@ -216,7 +274,19 @@ function createArticleCard(article) {
         article
     );
 
+    const statusElement = document.createElement(
+        "span"
+    );
+
+    statusElement.className = "article-item__status";
+
+    statusElement.textContent =
+        article.status === "draft"
+            ? "草稿"
+            : "已發布";
+
     contentElement.append(
+        statusElement,
         titleElement,
         metaElement
     );
@@ -236,13 +306,174 @@ function createArticleCard(article) {
         );
     }
 
-    articleElement.append(
-        contentElement
+    const actionsElement = createArticleActions(
+        article
     );
-
+    
+    articleElement.append(
+        contentElement,
+        actionsElement
+    );
+    
     return articleElement;
 }
 
+function createArticleActions(article) {
+    const actionsElement = document.createElement(
+        "div"
+    );
+
+    actionsElement.className = "article-item__actions";
+
+    const editButton = createArticleActionButton({
+        label: "編輯",
+        variant: "secondary",
+        action: "edit"
+    });
+
+    const deleteButton = createArticleActionButton({
+        label: "刪除",
+        variant: "danger",
+        action: "delete"
+    });
+
+    if (article.status === "draft") {
+        const publishButton = createArticleActionButton({
+            label: "發布文章",
+            variant: "primary",
+            action: "publish",
+            article
+        });
+
+        actionsElement.append(
+            editButton,
+            publishButton,
+            deleteButton
+        );
+
+        return actionsElement;
+    }
+
+    const viewButton = createArticleActionButton({
+        label: "檢視",
+        variant: "secondary",
+        action: "view"
+    });
+
+    const unpublishButton = createArticleActionButton({
+        label: "取消發布",
+        variant: "secondary",
+        action: "unpublish"
+    });
+
+    actionsElement.append(
+        viewButton,
+        editButton,
+        unpublishButton,
+        deleteButton
+    );
+
+    return actionsElement;
+}
+
+
+function createArticleActionButton({
+    label,
+    variant,
+    action,
+    article = null
+}) {
+    const button = document.createElement(
+        "button"
+    );
+
+    button.type = "button";
+
+    button.className =
+        `article-action article-action--${variant}`;
+
+        button.dataset.articleAction = action;
+
+        button.textContent = label;
+        
+        button.disabled = action !== "publish";
+        if (action === "publish" && article) {
+            button.addEventListener(
+                "click",
+                () => publishArticle(article, button)
+            );
+        }
+        
+        return button;
+}
+
+async function publishArticle(
+    article,
+    button
+) {
+    const confirmed = window.confirm(
+        `確定要發布「${article.title || article.filename}」嗎？`
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const originalText = button.textContent;
+
+    button.disabled = true;
+    button.textContent = "發布中...";
+
+    try {
+        const response = await fetch(
+            "/.netlify/functions/admin-publish-article",
+            {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    path: article.path
+                })
+            }
+        );
+
+        const result = await response.json();
+
+        if (response.status === 401) {
+            redirectToLogin();
+            return;
+        }
+
+        if (!response.ok || !result.ok) {
+            throw new Error(
+                result.error ||
+                "Unable to publish article."
+            );
+        }
+
+        window.alert(
+            "文章已成功發布。公開網站會在部署完成後更新。"
+        );
+
+        await loadArticles();
+    } catch (error) {
+        console.error(
+            "[CMS Admin] Failed to publish article:",
+            error
+        );
+
+        window.alert(
+            error.message ||
+            "文章發布失敗，請稍後再試。"
+        );
+
+        button.disabled = false;
+        button.textContent = originalText;
+    }
+}
 
 function formatArticleMeta(article) {
     const parts = [];
@@ -293,5 +524,8 @@ function setArticleStatus(
     );
 
     articleStatus.hidden = false;
-    articleList.hidden = true;
+
+    if (articleContent) {
+        articleContent.hidden = true;
+    }
 }

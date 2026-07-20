@@ -1,7 +1,8 @@
 import path from "node:path";
 
 import {
-    getRepositoryFile
+    getRepositoryFile,
+    listRepositoryDirectory
 } from "./_shared/github-client.mjs";
 
 import {
@@ -12,7 +13,8 @@ import {
 
 const ARTICLES_MANIFEST_PATH =
     "data/articles.json";
-
+const ARTICLE_DRAFTS_DIRECTORY =
+    "content/articles/drafts";
 
 export default async function handler(request) {
     if (request.method !== "GET") {
@@ -52,74 +54,47 @@ export default async function handler(request) {
             );
         }
 
-        const articlePaths = JSON.parse(
+        const publishedPaths = JSON.parse(
             manifestFile.content
         );
 
-        if (!Array.isArray(articlePaths)) {
+        if (!Array.isArray(publishedPaths)) {
             throw new Error(
                 "Article manifest must contain an array."
             );
         }
 
-        const articles = [];
+        const published = await loadArticlesFromPaths(
+            publishedPaths,
+            "published"
+        );
 
-        for (const articlePath of articlePaths) {
-            if (typeof articlePath !== "string") {
-                continue;
-            }
+        const draftEntries = await listRepositoryDirectory(
+            ARTICLE_DRAFTS_DIRECTORY
+        );
 
-            const normalizedPath = normalizeProjectPath(
-                articlePath
-            );
+        const draftPaths = draftEntries
+            .filter((entry) => (
+                entry.type === "file" &&
+                entry.name.toLowerCase().endsWith(".md")
+            ))
+            .map((entry) => entry.path);
 
-            const articleFile = await getRepositoryFile(
-                normalizedPath
-            );
-
-            if (!articleFile) {
-                console.warn(
-                    `[CMS Articles] Article file not found: ${normalizedPath}`
-                );
-
-                continue;
-            }
-
-            const source = articleFile.content;
-
-            const document = parseMarkdownDocument(source);
-
-            articles.push({
-                path: normalizedPath.replaceAll("\\", "/"),
-                filename: path.basename(normalizedPath),
-                title:
-                    document.frontMatter.title ||
-                    path.basename(
-                        normalizedPath,
-                        path.extname(normalizedPath)
-                    ),
-                date:
-                    document.frontMatter.date ||
-                    null,
-                description:
-                    document.frontMatter.summary ||
-                    document.frontMatter.description ||
-                    document.frontMatter.excerpt ||
-                    "",
-                slug:
-                    document.frontMatter.slug ||
-                    path.basename(
-                        normalizedPath,
-                        path.extname(normalizedPath)
-                    )
-            });
-        }
+        const drafts = await loadArticlesFromPaths(
+            draftPaths,
+            "draft"
+        );
 
         return jsonResponse(
             200,
             {
                 ok: true,
-                articles
+        
+                // 暫時保留，避免現有前端立刻壞掉。
+                articles: published,
+        
+                drafts,
+                published
             },
             {
                 "Cache-Control":
@@ -144,6 +119,73 @@ export default async function handler(request) {
     }
 }
 
+async function loadArticlesFromPaths(
+    articlePaths,
+    status
+) {
+    const articles = [];
+
+    for (const articlePath of articlePaths) {
+        if (typeof articlePath !== "string") {
+            continue;
+        }
+
+        const normalizedPath = normalizeProjectPath(
+            articlePath
+        );
+
+        const articleFile = await getRepositoryFile(
+            normalizedPath
+        );
+
+        if (!articleFile) {
+            console.warn(
+                `[CMS Articles] Article file not found: ${normalizedPath}`
+            );
+
+            continue;
+        }
+
+        try {
+            const document = parseMarkdownDocument(
+                articleFile.content
+            );
+
+            articles.push({
+                path: normalizedPath,
+                filename: path.basename(normalizedPath),
+                status,
+                title:
+                    document.frontMatter.title ||
+                    path.basename(
+                        normalizedPath,
+                        path.extname(normalizedPath)
+                    ),
+                date:
+                    document.frontMatter.date ||
+                    null,
+                description:
+                    document.frontMatter.summary ||
+                    document.frontMatter.description ||
+                    document.frontMatter.excerpt ||
+                    "",
+                slug:
+                    document.frontMatter.slug ||
+                    path.basename(
+                        normalizedPath,
+                        path.extname(normalizedPath)
+                    )
+            });
+        } catch (error) {
+            console.warn(
+                `[CMS Articles] Invalid article file: ${normalizedPath}`,
+                error
+            );
+        }
+    }
+
+    return articles;
+}
 
 function normalizeProjectPath(value) {
     const normalizedPath = String(value)

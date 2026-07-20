@@ -44,30 +44,77 @@
     <main class="admin-main">
         <section class="admin-card">
             <div class="section-heading">
-                <div>
+                <div class="section-heading__content">
                     <p class="section-eyebrow">
                         Content
                     </p>
-            
+
                     <h2>
                         Article Management
                     </h2>
-            
+
                     <p class="section-description">
-                        查看目前已發布的健康文章。
+                        管理健康文章草稿與已發布內容。
                     </p>
                 </div>
-            
-                <a
-                    class="primary-button section-action"
-                    href="/admin/app/article-new.html"
-                >
+
+                <a class="primary-button section-action" href="/admin/app/article-new.html">
                     新增文章
                 </a>
             </div>
 
             <div id="article-status" class="content-status" aria-live="polite">
                 正在載入文章...
+            </div>
+
+            <div id="article-content" hidden>
+                <section class="article-group">
+                    <div class="article-group__heading">
+                        <div>
+                            <p class="section-eyebrow">
+                                Drafts
+                            </p>
+
+                            <h3>
+                                草稿文章
+                            </h3>
+                        </div>
+
+                        <span id="draft-count">
+                            0 篇
+                        </span>
+                    </div>
+
+                    <div id="draft-article-list" class="article-list"></div>
+
+                    <p id="draft-empty" class="content-status" hidden>
+                        目前沒有草稿文章。
+                    </p>
+                </section>
+
+                <section class="article-group">
+                    <div class="article-group__heading">
+                        <div>
+                            <p class="section-eyebrow">
+                                Published
+                            </p>
+
+                            <h3>
+                                已發布文章
+                            </h3>
+                        </div>
+
+                        <span id="published-count">
+                            0 篇
+                        </span>
+                    </div>
+
+                    <div id="published-article-list" class="article-list"></div>
+
+                    <p id="published-empty" class="content-status" hidden>
+                        目前沒有已發布的文章。
+                    </p>
+                </section>
             </div>
 
             <div id="article-list" class="article-list" hidden></div>

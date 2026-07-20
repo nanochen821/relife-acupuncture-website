@@ -131,6 +131,65 @@ export async function getRepositoryFile(filePath) {
     };
 }
 
+export async function listRepositoryDirectory(
+    directoryPath
+) {
+    const config = getRepositoryConfig();
+
+    const normalizedPath =
+        normalizeRepositoryPath(directoryPath);
+
+    const encodedPath =
+        encodeRepositoryPath(normalizedPath);
+
+    const requestUrl = new URL(
+        `${GITHUB_API_BASE_URL}/repos/` +
+        `${encodeURIComponent(config.owner)}/` +
+        `${encodeURIComponent(config.repository)}/` +
+        `contents/${encodedPath}`
+    );
+
+    requestUrl.searchParams.set(
+        "ref",
+        config.branch
+    );
+
+    const response = await fetch(
+        requestUrl,
+        {
+            method: "GET",
+            headers: createHeaders(config.token)
+        }
+    );
+
+    if (response.status === 404) {
+        return [];
+    }
+
+    const result = await readJsonResponse(response);
+
+    if (!response.ok) {
+        throw createGitHubApiError(
+            response,
+            result,
+            `Unable to list repository directory: ${directoryPath}`
+        );
+    }
+
+    if (!Array.isArray(result)) {
+        throw new Error(
+            `Repository path is not a directory: ${directoryPath}`
+        );
+    }
+
+    return result.map((item) => ({
+        name: item.name,
+        path: item.path,
+        sha: item.sha,
+        type: item.type,
+        size: item.size ?? null
+    }));
+}
 
 export async function createRepositoryFile({
     filePath,
@@ -201,6 +260,73 @@ export async function updateRepositoryFile({
     });
 }
 
+export async function deleteRepositoryFile({
+    filePath,
+    commitMessage,
+    expectedSha = null
+}) {
+    const config = getRepositoryConfig();
+
+    const normalizedPath =
+        normalizeRepositoryPath(filePath);
+
+    let sha = expectedSha;
+
+    if (!sha) {
+        const existingFile = await getRepositoryFile(
+            normalizedPath
+        );
+
+        if (!existingFile) {
+            const error = new Error(
+                `Repository file does not exist: ${normalizedPath}`
+            );
+
+            error.code = "FILE_NOT_FOUND";
+            throw error;
+        }
+
+        sha = existingFile.sha;
+    }
+
+    const encodedPath =
+        encodeRepositoryPath(normalizedPath);
+
+    const requestUrl =
+        `${GITHUB_API_BASE_URL}/repos/` +
+        `${encodeURIComponent(config.owner)}/` +
+        `${encodeURIComponent(config.repository)}/` +
+        `contents/${encodedPath}`;
+
+    const response = await fetch(
+        requestUrl,
+        {
+            method: "DELETE",
+            headers: createHeaders(config.token),
+            body: JSON.stringify({
+                message: commitMessage,
+                sha,
+                branch: config.branch
+            })
+        }
+    );
+
+    const result = await readJsonResponse(response);
+
+    if (!response.ok) {
+        throw createGitHubApiError(
+            response,
+            result,
+            `Unable to delete repository file: ${filePath}`
+        );
+    }
+
+    return {
+        path: normalizedPath,
+        commitSha: result.commit?.sha || null,
+        commitUrl: result.commit?.html_url || null
+    };
+}
 
 async function putRepositoryFile({
     config,
