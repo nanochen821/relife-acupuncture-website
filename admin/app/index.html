@@ -1,96 +1,71 @@
 <!doctype html>
 <html lang="zh-Hant">
+
 <head>
     <meta charset="utf-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta
-        name="robots"
-        content="noindex, nofollow"
-    >
+    <meta name="robots" content="noindex, nofollow">
 
     <title>ReLife CMS</title>
 
-    <link
-        rel="stylesheet"
-        href="/admin/admin.css"
-    >
+    <link rel="stylesheet" href="/admin/admin.css">
 
-    <script
-        src="/admin/admin-app.js"
-        defer
-    ></script>
+    <script src="/admin/admin-app.js" defer></script>
 </head>
 
 <body class="admin-page">
 
-<header class="admin-header">
+    <header class="admin-header">
 
-    <div>
-        <h1>ReLife CMS</h1>
+        <div>
+            <h1>ReLife CMS</h1>
 
-        <p class="admin-subtitle">
-            Clinic Content Management
-        </p>
-    </div>
+            <p class="admin-subtitle">
+                Clinic Content Management
+            </p>
+        </div>
 
-    <div class="admin-user">
+        <div class="admin-user">
 
-        <span id="current-user">
-            Loading...
-        </span>
+            <span id="current-user">
+                Loading...
+            </span>
 
-        <button
-            id="logout-button"
-            class="secondary-button"
-            type="button"
-        >
-            Logout
-        </button>
+            <button id="logout-button" class="secondary-button" type="button">
+                Logout
+            </button>
 
-    </div>
+        </div>
 
-</header>
+    </header>
 
-<main class="admin-main">
+    <main class="admin-main">
+        <section class="admin-card">
+            <div class="section-heading">
+                <div>
+                    <p class="section-eyebrow">
+                        Content
+                    </p>
 
-    <section class="admin-card">
+                    <h2>
+                        Article Management
+                    </h2>
 
-        <h2>
-            Dashboard
-        </h2>
+                    <p class="section-description">
+                        查看目前已發布的健康文章。
+                    </p>
+                </div>
+            </div>
 
-        <p>
+            <div id="article-status" class="content-status" aria-live="polite">
+                正在載入文章...
+            </div>
 
-            Authentication succeeded.
-
-        </p>
-
-        <p>
-
-            Next step:
-
-        </p>
-
-        <ul>
-
-            <li>Article Management</li>
-
-            <li>Patient Stories</li>
-
-            <li>Media Upload</li>
-
-            <li>Publish</li>
-
-        </ul>
-
-    </section>
-
-</main>
-
+            <div id="article-list" class="article-list" hidden></div>
+        </section>
+    </main>
 </body>
+
 </html>
