@@ -26,8 +26,10 @@ async function loadSession() {
             {
                 method: "GET",
                 credentials: "same-origin",
+                cache: "no-store",
                 headers: {
-                    Accept: "application/json"
+                    Accept: "application/json",
+                    "Cache-Control": "no-cache"
                 }
             }
         );
@@ -50,8 +52,10 @@ async function loadSession() {
         currentUserElement.textContent =
             `登入帳號：${result.user.username}`;
 
-        await loadArticles();
-        
+        if (articleStatus && articleList) {
+            await loadArticles();
+        }
+
     } catch (error) {
         console.error(
             "[CMS Auth] Session request failed:",

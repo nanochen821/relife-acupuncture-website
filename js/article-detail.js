@@ -715,20 +715,21 @@ async function loadArticle() {
             );
         }
 
-        const selectedMarkdownPath =
-            markdownPaths.find((markdownPath) => {
-                return (
-                    getSlugFromMarkdownPath(markdownPath) ===
-                    requestedSlug
-                );
-            });
-
         let selectedArticle = null;
 
-        if (selectedMarkdownPath) {
-            selectedArticle = await loadMarkdownArticle(
-                selectedMarkdownPath
+        for (const markdownPath of markdownPaths) {
+            const article = await loadMarkdownArticle(
+                markdownPath
             );
+
+            if (
+                article.slug === requestedSlug ||
+                getSlugFromMarkdownPath(markdownPath) ===
+                requestedSlug
+            ) {
+                selectedArticle = article;
+                break;
+            }
         }
 
         if (!selectedArticle) {

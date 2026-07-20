@@ -1,5 +1,8 @@
-import { promises as fs } from "node:fs";
 import path from "node:path";
+
+import {
+    getRepositoryFile
+} from "./_shared/github-client.mjs";
 
 import {
     getSessionFromRequest,
@@ -7,13 +10,8 @@ import {
 } from "./_shared/admin-auth.mjs";
 
 
-const PROJECT_ROOT = process.cwd();
-
-const ARTICLES_MANIFEST_PATH = path.join(
-    PROJECT_ROOT,
-    "data",
-    "articles.json"
-);
+const ARTICLES_MANIFEST_PATH =
+    "data/articles.json";
 
 
 export default async function handler(request) {
@@ -44,12 +42,19 @@ export default async function handler(request) {
             );
         }
 
-        const manifestSource = await fs.readFile(
-            ARTICLES_MANIFEST_PATH,
-            "utf8"
+        const manifestFile = await getRepositoryFile(
+            ARTICLES_MANIFEST_PATH
         );
 
-        const articlePaths = JSON.parse(manifestSource);
+        if (!manifestFile) {
+            throw new Error(
+                "Article manifest could not be found."
+            );
+        }
+
+        const articlePaths = JSON.parse(
+            manifestFile.content
+        );
 
         if (!Array.isArray(articlePaths)) {
             throw new Error(
@@ -68,15 +73,19 @@ export default async function handler(request) {
                 articlePath
             );
 
-            const absolutePath = path.join(
-                PROJECT_ROOT,
+            const articleFile = await getRepositoryFile(
                 normalizedPath
             );
 
-            const source = await fs.readFile(
-                absolutePath,
-                "utf8"
-            );
+            if (!articleFile) {
+                console.warn(
+                    `[CMS Articles] Article file not found: ${normalizedPath}`
+                );
+
+                continue;
+            }
+
+            const source = articleFile.content;
 
             const document = parseMarkdownDocument(source);
 
@@ -93,6 +102,7 @@ export default async function handler(request) {
                     document.frontMatter.date ||
                     null,
                 description:
+                    document.frontMatter.summary ||
                     document.frontMatter.description ||
                     document.frontMatter.excerpt ||
                     "",
@@ -110,6 +120,12 @@ export default async function handler(request) {
             {
                 ok: true,
                 articles
+            },
+            {
+                "Cache-Control":
+                    "no-store, no-cache, must-revalidate, max-age=0",
+                Pragma: "no-cache",
+                Expires: "0"
             }
         );
     } catch (error) {
@@ -130,12 +146,16 @@ export default async function handler(request) {
 
 
 function normalizeProjectPath(value) {
-    const normalizedPath = path.normalize(value);
+    const normalizedPath = String(value)
+        .replaceAll("\\", "/")
+        .replace(/^\/+/, "");
+
+    const pathParts = normalizedPath.split("/");
 
     if (
-        path.isAbsolute(normalizedPath) ||
-        normalizedPath.startsWith("..") ||
-        normalizedPath.includes(`..${path.sep}`)
+        !normalizedPath ||
+        pathParts.includes("..") ||
+        pathParts.includes(".")
     ) {
         throw new Error(
             `Unsafe article path: ${value}`
