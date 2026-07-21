@@ -224,10 +224,12 @@ function resolveProjectFilePath(filePath) {
     const normalizedPath = String(filePath || "")
         .replace(/^\.?\//, "");
 
-    return new URL(
-        `../../${normalizedPath}`,
-        window.location.href
-    ).href;
+    // 方案 1：直接透過當前網頁根目錄計算相對路徑 (推薦)
+    return new URL(`/${normalizedPath}`, window.location.origin).href;
+    
+    // 或者方案 2：如果是在 GitHub Pages (網址帶有 /relife-acupuncture-website/ 子路徑)
+    // 可以直接使用基於相對位置的 URL：
+    // return new URL(`../../${normalizedPath}`, import.meta.url).href; 
 }
 
 async function loadMarkdownArticle(markdownPath) {
